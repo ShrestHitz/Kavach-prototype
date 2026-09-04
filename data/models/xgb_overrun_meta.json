@@ -1,0 +1,18 @@
+{
+  "model_type": "XGBRegressor",
+  "features": [
+    "elapsed_pct",
+    "utilization_pct",
+    "cost_ratio",
+    "payment_count",
+    "payment_spike_ratio",
+    "progress_gap",
+    "category_enc",
+    "state_enc",
+    "reported_progress_pct"
+  ],
+  "version": "1.0.0",
+  "trained_on_rows": 446,
+  "target": "overrun_ratio = total_expenditure / sanctioned_amount",
+  "mae_test": 0.0051
+}

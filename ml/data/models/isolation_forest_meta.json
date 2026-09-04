@@ -1,0 +1,24 @@
+{
+  "model": "IsolationForest",
+  "task": "unsupervised_anomaly_detection",
+  "n_estimators": 300,
+  "contamination": 0.07,
+  "features": [
+    "utilization_pct",
+    "cost_ratio",
+    "payment_count",
+    "payment_spike_ratio",
+    "progress_gap"
+  ],
+  "train_size": 558,
+  "metrics": {
+    "n_anomalies": 39,
+    "anomaly_pct": 6.99,
+    "score_min": -0.1363,
+    "score_max": 0.1636,
+    "score_mean": 0.0925,
+    "score_std": 0.0514
+  },
+  "note": "Unsupervised model \u2014 no ground truth labels. Anomaly rate validated by domain rules.",
+  "trained_at": "2026-09-03T21:18:00.049237"
+}

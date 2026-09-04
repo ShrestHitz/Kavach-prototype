@@ -1,0 +1,66 @@
+# ===========================
+# OS / Editor
+# ===========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+*.iml
+.vscode/settings.json
+.vscode/launch.json
+
+# ===========================
+# Environment / Secrets
+# ===========================
+.env
+*.env.local
+*.env.production
+
+# ===========================
+# Frontend
+# ===========================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ===========================
+# Backend (Java / Maven)
+# ===========================
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+!backend/.mvn/wrapper/maven-wrapper.properties
+
+# ===========================
+# ML Service (Python)
+# ===========================
+ml/.venv/
+ml/__pycache__/
+ml/**/__pycache__/
+ml/**/*.pyc
+ml/models/*.pkl
+ml/models/*.joblib
+ml/models/*.json
+!ml/models/.gitkeep
+
+# ===========================
+# Data (raw / sensitive)
+# ===========================
+data/raw/*.xlsx
+data/raw/*.csv
+data/raw/*.pdf
+!data/raw/.gitkeep
+data/synthetic/*.csv
+!data/synthetic/.gitkeep
+
+# ===========================
+# Reports (generated PDFs)
+# ===========================
+reports/output/
+*.pdf
+
+# ===========================
+# Logs
+# ===========================
+*.log
+logs/

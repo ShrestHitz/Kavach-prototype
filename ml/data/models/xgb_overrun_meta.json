@@ -1,0 +1,39 @@
+{
+  "model": "XGBRegressor",
+  "task": "regression",
+  "target": "overrun_ratio (estimated_cost / sanctioned)",
+  "n_estimators": 200,
+  "max_depth": 4,
+  "train_size": 446,
+  "test_size": 112,
+  "features": [
+    "elapsed_pct",
+    "utilization_pct",
+    "cost_ratio",
+    "payment_count",
+    "payment_spike_ratio",
+    "progress_gap",
+    "category_enc",
+    "state_enc",
+    "reported_progress_pct"
+  ],
+  "metrics": {
+    "mae": 0.0192,
+    "rmse": 0.0593,
+    "r2_score_pct": 50.46,
+    "cv_r2_mean": 77.72,
+    "cv_r2_std": 13.69
+  },
+  "shap_feature_importance": {
+    "cost_ratio": 0.04974700137972832,
+    "utilization_pct": 0.004348000045865774,
+    "reported_progress_pct": 0.0027280000504106283,
+    "payment_spike_ratio": 0.0026519999373704195,
+    "elapsed_pct": 0.002222999930381775,
+    "state_enc": 0.0017679999582469463,
+    "progress_gap": 0.0015910000074654818,
+    "category_enc": 0.0010000000474974513,
+    "payment_count": 0.0007980000227689743
+  },
+  "trained_at": "2026-09-03T21:17:58.927957"
+}

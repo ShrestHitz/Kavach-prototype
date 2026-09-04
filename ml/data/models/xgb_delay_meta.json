@@ -1,0 +1,82 @@
+{
+  "model": "XGBClassifier",
+  "task": "binary_classification",
+  "target": "is_delayed (delayed > 30 days)",
+  "n_estimators": 200,
+  "max_depth": 5,
+  "train_size": 446,
+  "test_size": 112,
+  "features": [
+    "elapsed_pct",
+    "reported_progress_pct",
+    "expected_progress_pct",
+    "progress_gap",
+    "utilization_pct",
+    "cost_ratio",
+    "payment_count",
+    "payment_spike_ratio",
+    "category_enc",
+    "state_enc",
+    "total_days"
+  ],
+  "metrics": {
+    "accuracy_pct": 92.86,
+    "auc_roc_pct": 94.8,
+    "f1_score_pct": 95.35,
+    "precision_pct": 91.11,
+    "recall_pct": 100.0,
+    "cv_auc_mean": 95.9,
+    "cv_auc_std": 0.95
+  },
+  "confusion_matrix": [
+    [
+      22,
+      8
+    ],
+    [
+      0,
+      82
+    ]
+  ],
+  "shap_feature_importance": {
+    "elapsed_pct": 2.689394950866699,
+    "progress_gap": 0.8908060193061829,
+    "utilization_pct": 0.6543049812316895,
+    "payment_spike_ratio": 0.5367540121078491,
+    "reported_progress_pct": 0.4828000068664551,
+    "total_days": 0.31407400965690613,
+    "category_enc": 0.3119319975376129,
+    "expected_progress_pct": 0.31190600991249084,
+    "state_enc": 0.247530996799469,
+    "cost_ratio": 0.2041109949350357,
+    "payment_count": 0.134784996509552
+  },
+  "class_report": {
+    "0": {
+      "precision": 1.0,
+      "recall": 0.7333333333333333,
+      "f1-score": 0.8461538461538461,
+      "support": 30.0
+    },
+    "1": {
+      "precision": 0.9111111111111111,
+      "recall": 1.0,
+      "f1-score": 0.9534883720930233,
+      "support": 82.0
+    },
+    "accuracy": 0.9285714285714286,
+    "macro avg": {
+      "precision": 0.9555555555555555,
+      "recall": 0.8666666666666667,
+      "f1-score": 0.8998211091234347,
+      "support": 112.0
+    },
+    "weighted avg": {
+      "precision": 0.9349206349206349,
+      "recall": 0.9285714285714286,
+      "f1-score": 0.9247380526450294,
+      "support": 112.0
+    }
+  },
+  "trained_at": "2026-09-03T21:17:57.212434"
+}

@@ -1,0 +1,21 @@
+{
+  "model_type": "XGBClassifier",
+  "features": [
+    "elapsed_pct",
+    "reported_progress_pct",
+    "expected_progress_pct",
+    "progress_gap",
+    "utilization_pct",
+    "cost_ratio",
+    "payment_count",
+    "payment_spike_ratio",
+    "category_enc",
+    "state_enc",
+    "total_days"
+  ],
+  "threshold": 0.5,
+  "version": "1.0.0",
+  "trained_on_rows": 446,
+  "positive_class": "DELAYED (delay_days > 30)",
+  "scale_pos_weight": 1
+}

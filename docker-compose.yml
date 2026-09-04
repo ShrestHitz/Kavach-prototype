@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: mplads_sentinel_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-mplads_sentinel}
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-SentinelDB@2026!}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/main/resources/db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sentinel_user} -d ${POSTGRES_DB:-mplads_sentinel}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Uncomment when ready to run all services via Docker
+  # backend:
+  #   build: ./backend
+  #   container_name: mplads_sentinel_backend
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-mplads_sentinel}
+  #     SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-sentinel_user}
+  #     SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-SentinelDB@2026!}
+  #     JWT_SECRET: ${JWT_SECRET}
+
+  # ml:
+  #   build: ./ml
+  #   container_name: mplads_sentinel_ml
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./ml/models:/app/models
+
+volumes:
+  postgres_data:
