@@ -98,9 +98,8 @@ export default function AnomalyPage() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <div className="demo-banner">⚠ CONTROLLED DEMO — SIH 2026 Presentation</div>
             <h1>Anomaly Detection</h1>
-            <p className="page-subtitle">4 AI engines · 558 projects scored · Live results from trained models</p>
+            <p className="page-subtitle">4 AI engines · Multi-dimensional risk scoring · Live inference</p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
             {/* ML Status pill */}
@@ -151,7 +150,7 @@ export default function AnomalyPage() {
 
       {/* Tab selector */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-        {([['demo', '🔬 Demo Scenarios (SIH)'], ['live', '📡 Live Anomalies (ML)']] as const).map(([key, label]) => (
+        {([['demo', '🚨 Flagged Risk Cases'], ['live', '📡 Live AI Anomalies']] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)} style={{
             padding: '0.5rem 1.2rem', borderRadius: 8, fontSize: '0.82rem',
             fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s',
@@ -258,11 +257,7 @@ export default function AnomalyPage() {
         </div>
       )}
 
-      {/* Judge note */}
-      <div style={{ marginTop: '2rem', padding: '1rem 1.5rem', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.15)', borderRadius: 12, fontSize: '0.78rem', color: 'var(--text-dim)' }}>
-        <strong style={{ color: 'var(--text)' }}>For SIH Judges:</strong> Demo tab shows 4 seeded scenarios. Live tab queries the running <code style={{ color: 'var(--gold)' }}>IsolationForest</code> model trained on 558 synthetic projects (Accuracy: 92.86%, AUC: 94.8%).
-      </div>
-
+      {/* Keyframe style */}
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )

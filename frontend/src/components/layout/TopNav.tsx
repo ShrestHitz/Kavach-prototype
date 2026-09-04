@@ -21,10 +21,19 @@ export default function TopNav() {
   useEffect(() => {
     const check = async () => {
       try {
-        // Ping ML FastAPI directly — bypasses Spring Boot backend
-        const r = await fetch('http://localhost:8001/health', { signal: AbortSignal.timeout(3000) })
-        const data = await r.json()
-        setMlStatus(data?.status === 'UP' ? 'UP' : 'DOWN')
+        let r = await fetch('http://localhost:8001/health/', { signal: AbortSignal.timeout(2000) }).catch(() => null)
+        if (!r || !r.ok) {
+          r = await fetch('http://localhost:8000/health/', { signal: AbortSignal.timeout(2000) }).catch(() => null)
+        }
+        if (!r || !r.ok) {
+          r = await fetch('/api/ml/health', { signal: AbortSignal.timeout(2000) }).catch(() => null)
+        }
+        if (r && r.ok) {
+          const data = await r.json()
+          setMlStatus(data?.status === 'UP' ? 'UP' : 'DOWN')
+        } else {
+          setMlStatus('DOWN')
+        }
       } catch { setMlStatus('DOWN') }
     }
     check()

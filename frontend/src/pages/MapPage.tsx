@@ -2,6 +2,7 @@
  * MapPage — Risk Map with OpenStreetMap (no API key) + 30 dummy project markers
  */
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -62,6 +63,7 @@ function FlyToIndia() {
 }
 
 export default function MapPage() {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<string>('ALL')
 
   const filtered = filter === 'ALL' ? DEMO_POINTS : DEMO_POINTS.filter(p => p.riskLevel === filter)
@@ -143,6 +145,17 @@ export default function MapPage() {
                     </span>
                     <span style={{ fontSize: 11, fontWeight: 600, color: '#0f172a' }}>{p.amount}</span>
                   </div>
+                  <button
+                    onClick={() => navigate(`/projects/${p.id}`)}
+                    style={{
+                      marginTop: 8, width: '100%', padding: '4px 8px', borderRadius: 6,
+                      background: '#1e293b', color: '#60a5fa', border: '1px solid #3b82f6',
+                      fontSize: 11, fontWeight: 700, cursor: 'pointer', display: 'flex',
+                      alignItems: 'center', justifyContent: 'center', gap: 4
+                    }}
+                  >
+                    View Project Details →
+                  </button>
                 </div>
               </Popup>
             </CircleMarker>
