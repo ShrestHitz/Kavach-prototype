@@ -101,7 +101,7 @@ export default function AnomalyPage() {
           <div>
             <div className="demo-banner">VIGILANCE RADAR · ACTIVE SURVEILLANCE MESH</div>
             <h1>Anomaly Detection</h1>
-            <p className="page-subtitle">4 AI engines · 558 projects scored · Live results from trained models</p>
+            <p className="page-subtitle">4 AI engines · Multi-dimensional risk scoring · Live inference</p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
             {/* ML Status pill */}
@@ -155,7 +155,7 @@ export default function AnomalyPage() {
 
       {/* Tab selector */}
       <div style={{ display: 'flex', gap: '0.65rem', marginBottom: '1.5rem' }}>
-        {([['demo', '🔬 Demo Scenarios (Benchmark)'], ['live', '📡 Live Anomalies (ML Radar)']] as const).map(([key, label]) => (
+        {([['demo', '🚨 Flagged Risk Cases (Benchmark)'], ['live', '📡 Live AI Anomalies (ML Radar)']] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)} style={{
             padding: '0.55rem 1.3rem', borderRadius: 999, fontSize: '0.82rem',
             fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s',

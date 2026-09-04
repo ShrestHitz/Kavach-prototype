@@ -247,32 +247,110 @@ def demo_photo_scenarios():
     }
 
 
+from app.services.photo_verifier import verify_photo_evidence
+
+
 @router.post("/verify-photo-upload")
+@router.post("/photo/verify")
 async def verify_photo_upload(
-    file: UploadFile = File(...),
+    file: Optional[UploadFile] = File(None),
+    files: Optional[List[UploadFile]] = File(None),
+    project_code: str = "PROJECT-VERIFY",
     project_lat: float = 0.0,
+    declared_lat: float = 0.0,
     project_lon: float = 0.0,
+    declared_lon: float = 0.0,
     sanction_date: str = "2024-01-01",
 ):
-    """Upload an image and verify its EXIF metadata against project records."""
-    if not PIL_AVAILABLE:
-        raise HTTPException(501, "Pillow not installed. Run: pip install Pillow")
+    """
+    Advanced Photo Verification:
+    - AI-generated image detection (FFT spectrum, PRNU noise, metadata)
+    - Multi-panel collage splitting (e.g. 2x2 grid)
+    - OCR-based and EXIF-based GPS & timestamp extraction
+    - Pairwise distance matrix and strict location mismatch error enforcement
+    - Controls disbursement report generation authorization
+    """
+    # Gather uploaded files without duplication
+    input_files = []
+    if files and len(files) > 0:
+        input_files.extend(files)
+    elif file is not None:
+        input_files.append(file)
 
-    img_bytes = await file.read()
-    img_hash = hashlib.sha256(img_bytes).hexdigest()[:16]
+    if not input_files:
+        raise HTTPException(400, "No photo files uploaded for verification.")
 
-    exif = _extract_exif(img_bytes)
-    gps  = _parse_gps(exif)
-    ts   = _parse_datetime(exif)
+    target_lat = declared_lat if declared_lat != 0.0 else project_lat
+    target_lon = declared_lon if declared_lon != 0.0 else project_lon
 
-    req = PhotoVerifyRequest(
-        project_code=f"UPLOAD-{img_hash}",
-        project_lat=project_lat,
-        project_lon=project_lon,
+    image_payloads = []
+    for f in input_files:
+        b = await f.read()
+        image_payloads.append((f.filename or "upload.jpg", b))
+
+    # Run verification engine
+    evidence = verify_photo_evidence(
+        image_payloads,
+        declared_lat=target_lat,
+        declared_lon=target_lon,
         sanction_date=sanction_date,
-        photo_lat=gps[0]  if gps else None,
-        photo_lon=gps[1]  if gps else None,
-        photo_timestamp=ts.strftime("%Y-%m-%d %H:%M:%S") if ts else None,
-        photo_hash=img_hash,
     )
-    return verify_photo_metadata(req)
+
+    # Compute fraud score based on location mismatch and AI detection
+    fraud_score = 0.0
+    flags = []
+
+    if evidence["status"] == "REJECTED":
+        fraud_score += 85.0
+        flags.append({
+            "flag_type": "GPS_MISMATCH",
+            "severity": "CRITICAL",
+            "detail": evidence.get("error_message") or f"Location mismatch of {evidence.get('max_pairwise_km')} km detected."
+        })
+    
+    if evidence["ai_detection"]["is_ai_generated"]:
+        fraud_score += 65.0
+        flags.append({
+            "flag_type": "AI_GENERATED",
+            "severity": "HIGH",
+            "detail": f"AI-Generated image detected ({evidence['ai_detection']['confidence_score']}% probability)."
+        })
+
+    for a in evidence.get("anomalies", []):
+        if not any(f["detail"] == a for f in flags):
+            flags.append({
+                "flag_type": "ANOMALY",
+                "severity": "MEDIUM",
+                "detail": a
+            })
+
+    fraud_score = min(100.0, fraud_score)
+    is_suspicious = fraud_score >= 40.0
+
+    verdict = (
+        "FRAUD_REJECTED — Location mismatch detected across uploaded photos"
+        if evidence["status"] == "REJECTED" else
+        "SUSPICIOUS — AI-generated imagery or temporal anomaly detected"
+        if is_suspicious else
+        "VERIFIED — Authentic photos, site location & milestones verified"
+    )
+
+    return {
+        "project_code": project_code,
+        "status": evidence["status"],
+        "allow_report_generation": evidence["allow_report_generation"],
+        "error_type": evidence["error_type"],
+        "error_message": evidence["error_message"],
+        "ai_detection": evidence["ai_detection"],
+        "panels_analyzed": evidence["panels_analyzed"],
+        "panels": evidence["panels"],
+        "max_pairwise_km": evidence["max_pairwise_km"],
+        "pairwise_distances": evidence["pairwise_distances"],
+        "flags": flags,
+        "gps_distance_km": evidence["max_pairwise_km"],
+        "sanction_date": sanction_date,
+        "is_suspicious": is_suspicious,
+        "fraud_score": fraud_score,
+        "verdict": verdict,
+    }
+

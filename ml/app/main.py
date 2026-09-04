@@ -33,6 +33,7 @@ app.add_middleware(
 
 # Register routers
 app.include_router(health.router, prefix="/health", tags=["Health"])
+app.include_router(health.router, prefix="/api/ml", tags=["Health"])
 app.include_router(anomaly.router, prefix="/api/ml", tags=["Anomaly Detection"])
 app.include_router(predict.router, prefix="/api/ml", tags=["Predictions"])
 app.include_router(similarity.router, prefix="/api/ml", tags=["Similarity"])

@@ -8,6 +8,7 @@ router = APIRouter()
 
 
 @router.get("/")
+@router.get("/health")
 def health():
     ready = models_ready()
     return {

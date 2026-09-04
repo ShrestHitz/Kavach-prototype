@@ -3,6 +3,7 @@
  * Matches Kochi Metro "Explore the Network" aesthetic
  */
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import WorldMapWatermark from '../components/ui/WorldMapWatermark'
@@ -67,6 +68,7 @@ function FlyToIndia() {
 }
 
 export default function MapPage() {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<string>('ALL')
 
   const filtered = filter === 'ALL' ? DEMO_POINTS : DEMO_POINTS.filter(p => p.riskLevel === filter)
@@ -203,6 +205,18 @@ export default function MapPage() {
                       </span>
                       <span style={{ fontSize: 12, fontWeight: 800, color: '#0F172A' }}>{p.amount}</span>
                     </div>
+                    <button
+                      onClick={() => navigate(`/projects/${p.id}`)}
+                      style={{
+                        marginTop: 8, width: '100%', padding: '6px 10px', borderRadius: 8,
+                        background: 'linear-gradient(135deg, #00A896, #028090)', color: '#FFFFFF', border: 'none',
+                        fontSize: 11, fontWeight: 800, cursor: 'pointer', display: 'flex',
+                        alignItems: 'center', justifyContent: 'center', gap: 4,
+                        boxShadow: '0 2px 8px rgba(0, 168, 150, 0.25)'
+                      }}
+                    >
+                      View Project Details →
+                    </button>
                   </div>
                 </Popup>
               </CircleMarker>

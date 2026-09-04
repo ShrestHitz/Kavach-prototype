@@ -158,34 +158,28 @@ function KavachLoader() {
   )
 }
 
-// ── Root App ─────────────────────────────────────────────────
 export default function App() {
   const { setAuth, isAuthenticated } = useAuthStore()
-  const [booting, setBooting] = useState(!isAuthenticated())
 
   useEffect(() => {
-    if (isAuthenticated()) { setBooting(false); return }
-
-    // Auto-login with demo ministry credentials
+    // Optionally background refresh auth if backend is up, without blocking UI
     api.post('/auth/login', { usernameOrEmail: 'ministry', password: 'Demo@1234' })
       .then(r => {
         const d = r.data
-        setAuth(d.token ?? '', {
-          userId:    d.userId,
-          username:  d.username,
-          fullName:  d.fullName  ?? 'Ministry Admin',
-          email:     d.email     ?? 'ministry@sentinel.gov.in',
-          role:      d.role      ?? 'MINISTRY',
-        })
+        if (d?.token) {
+          setAuth(d.token, {
+            userId:    d.userId,
+            username:  d.username,
+            fullName:  d.fullName  ?? 'Ministry Admin',
+            email:     d.email     ?? 'ministry@sentinel.gov.in',
+            role:      d.role      ?? 'MINISTRY',
+          })
+        }
       })
-      .catch(console.error)
-      .finally(() => {
-        // Show loader for at least 1.4s (matches animation)
-        setTimeout(() => setBooting(false), 1400)
+      .catch(() => {
+        // Safe to ignore; default demo auth is already active
       })
   }, [])
-
-  if (booting) return <KavachLoader />
 
   return (
     <BrowserRouter>

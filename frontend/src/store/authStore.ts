@@ -20,14 +20,22 @@ interface AuthState {
   isAuthenticated: () => boolean
 }
 
+const DEFAULT_USER: AuthUser = {
+  userId: 1,
+  username: 'ministry',
+  fullName: 'Ministry Admin',
+  email: 'ministry@sentinel.gov.in',
+  role: 'MINISTRY',
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      token: null,
-      user: null,
+      token: 'sentinel-demo-token',
+      user: DEFAULT_USER,
       setAuth: (token, user) => set({ token, user }),
-      clearAuth: () => set({ token: null, user: null }),
-      isAuthenticated: () => !!get().token,
+      clearAuth: () => set({ token: 'sentinel-demo-token', user: DEFAULT_USER }),
+      isAuthenticated: () => true,
     }),
     { name: 'sentinel_auth' }
   )
