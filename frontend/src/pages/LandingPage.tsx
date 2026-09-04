@@ -294,7 +294,7 @@ const CONSTITUENCIES = [
 /* ─── 3. Main Landing Page ────────────────────────────────────────────────── */
 export default function LandingPage() {
   const navigate = useNavigate()
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(true)
   const [scrolled, setScrolled] = useState(false)
   const [activeStage, setActiveStage] = useState(5)
   const [activeConstId, setActiveConstId] = useState('varanasi')

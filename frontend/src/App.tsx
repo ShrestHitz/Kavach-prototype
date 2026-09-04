@@ -8,6 +8,7 @@ import ProjectDetailPage     from './pages/ProjectDetailPage'
 import MapPage               from './pages/MapPage'
 import AnomalyPage           from './pages/AnomalyPage'
 import PhotoVerificationPage from './pages/PhotoVerificationPage'
+import LandingPage           from './pages/LandingPage'
 import TopNav                from './components/layout/TopNav'
 
 // ── Scroll progress bar ──────────────────────────────────────
@@ -189,7 +190,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<Navigate to="/dashboard" replace />} />
 
         <Route path="/dashboard" element={<AppLayout><DashboardPage /></AppLayout>} />

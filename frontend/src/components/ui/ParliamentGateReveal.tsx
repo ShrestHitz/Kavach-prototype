@@ -9,6 +9,7 @@ export default function ParliamentGateReveal() {
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [manualOpen, setManualOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,16 +30,19 @@ export default function ParliamentGateReveal() {
   }, [])
 
   // Eased progress for smooth door parting
-  const doorProgress = Math.min(Math.max((scrollProgress - 0.08) / 0.78, 0), 1)
+  const doorProgress = Math.min(Math.max((scrollProgress - 0.05) / 0.85, 0), 1)
   // Smooth cubic ease-in-out
   const easedProgress = doorProgress < 0.5
     ? 2 * doorProgress * doorProgress
     : 1 - Math.pow(-2 * doorProgress + 2, 2) / 2
 
-  const leftDoorTranslate = -easedProgress * 105
-  const rightDoorTranslate = easedProgress * 105
-  const sealScale = Math.max(1 - easedProgress * 1.3, 0)
-  const sealOpacity = Math.max(1 - easedProgress * 1.6, 0)
+  // Combine scroll progress and manual click trigger
+  const effectiveProgress = manualOpen ? 1 : easedProgress
+
+  const leftDoorTranslate = -effectiveProgress * 105
+  const rightDoorTranslate = effectiveProgress * 105
+  const sealScale = Math.max(1 - effectiveProgress * 1.3, 0)
+  const sealOpacity = Math.max(1 - effectiveProgress * 1.6, 0)
 
   return (
     <div
@@ -213,36 +217,59 @@ export default function ParliamentGateReveal() {
               })}
             </div>
 
-            {/* Direct Action Button */}
-            <button
-              onClick={() => navigate('/dashboard')}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                padding: '0.95rem 2.75rem',
-                borderRadius: 999,
-                background: 'linear-gradient(135deg, #00A896, #00D2C4)',
-                border: 'none',
-                color: '#07101E',
-                fontSize: '0.94rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                boxShadow: '0 10px 35px rgba(0, 168, 150, 0.5)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 14px 40px rgba(0, 168, 150, 0.65)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = '0 10px 35px rgba(0, 168, 150, 0.5)'
-              }}
-            >
-              <Eye size={17} />
-              Inspect Neural Core in Command Console →
-            </button>
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => navigate('/dashboard')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.6rem',
+                  padding: '0.95rem 2.75rem',
+                  borderRadius: 999,
+                  background: 'linear-gradient(135deg, #00A896, #00D2C4)',
+                  border: 'none',
+                  color: '#07101E',
+                  fontSize: '0.94rem',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  boxShadow: '0 10px 35px rgba(0, 168, 150, 0.5)',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = '0 14px 40px rgba(0, 168, 150, 0.65)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 10px 35px rgba(0, 168, 150, 0.5)'
+                }}
+              >
+                <Eye size={17} />
+                Inspect Neural Core in Command Console →
+              </button>
+
+              {manualOpen && (
+                <button
+                  onClick={() => setManualOpen(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.95rem 1.8rem',
+                    borderRadius: 999,
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1.5px solid rgba(255, 255, 255, 0.3)',
+                    color: '#FFFFFF',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Close Parliament Gates ↺
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -263,7 +290,7 @@ export default function ParliamentGateReveal() {
             borderRight: '3px solid #00A896',
             boxShadow: '18px 0 50px rgba(15, 23, 42, 0.35), inset -6px 0 25px rgba(0, 168, 150, 0.15)',
             transform: `translateX(${leftDoorTranslate}%)`,
-            transition: 'transform 0.08s linear',
+            transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
@@ -344,7 +371,7 @@ export default function ParliamentGateReveal() {
             borderLeft: '3px solid #00A896',
             boxShadow: '-18px 0 50px rgba(15, 23, 42, 0.35), inset 6px 0 25px rgba(0, 168, 150, 0.15)',
             transform: `translateX(${rightDoorTranslate}%)`,
-            transition: 'transform 0.08s linear',
+            transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
@@ -410,7 +437,7 @@ export default function ParliamentGateReveal() {
               4-Signal Shield Active
             </div>
             <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '0.3rem', fontWeight: 600 }}>
-              Scroll down to part the gates
+              Scroll down or click to part the gates
             </div>
           </div>
         </div>
@@ -418,14 +445,16 @@ export default function ParliamentGateReveal() {
         {/* CENTRAL ASHOKA / KAVACH STATUTORY SEAL (Splits open with scale & fade) */}
         {sealOpacity > 0.04 && (
           <div
+            onClick={() => setManualOpen(m => !m)}
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: `translate(-50%, -50%) scale(${sealScale})`,
               zIndex: 20,
-              pointerEvents: 'none',
-              transition: 'opacity 0.08s linear',
+              cursor: 'pointer',
+              pointerEvents: 'auto',
+              transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
               opacity: sealOpacity,
               display: 'flex',
               flexDirection: 'column',
@@ -435,8 +464,8 @@ export default function ParliamentGateReveal() {
             {/* Circular Glowing Seal */}
             <div
               style={{
-                width: 146,
-                height: 146,
+                width: 150,
+                height: 150,
                 borderRadius: '50%',
                 background: 'linear-gradient(135deg, #FFFFFF, #F8FAFC)',
                 border: '3.5px solid #00A896',
@@ -445,31 +474,37 @@ export default function ParliamentGateReveal() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '1.15rem',
+                transition: 'transform 0.2s',
               }}
+              onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.06)')}
+              onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             >
-              <Shield size={68} color="#00A896" strokeWidth={2.3} />
+              <Shield size={70} color="#00A896" strokeWidth={2.3} />
             </div>
 
             {/* Scroll Indicator Prompt */}
             <div
               style={{
-                padding: '0.5rem 1.4rem',
+                padding: '0.55rem 1.6rem',
                 borderRadius: 999,
                 background: '#0F172A',
                 border: '1.5px solid #00A896',
                 color: '#00D2C4',
-                fontSize: '0.76rem',
-                fontWeight: 800,
+                fontSize: '0.78rem',
+                fontWeight: 900,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                boxShadow: '0 6px 25px rgba(15, 23, 42, 0.35)',
+                gap: '0.55rem',
+                boxShadow: '0 6px 25px rgba(15, 23, 42, 0.4)',
+                transition: 'transform 0.2s',
               }}
+              onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
+              onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
             >
-              <span>Scroll to Part the Gates</span>
-              <ChevronDown size={15} className="animate-bounce" />
+              <span>Click or Scroll to Part Gates</span>
+              <ChevronDown size={16} className="animate-bounce" />
             </div>
           </div>
         )}

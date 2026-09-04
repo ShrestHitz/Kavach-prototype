@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Clock, IndianRupee, Zap, Activity } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Clock, IndianRupee, Zap, Activity, Landmark } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
 
 import PlantedAnomalyInspector from '../components/ui/PlantedAnomalyInspector'
@@ -110,6 +111,53 @@ export default function DashboardPage() {
 
       {/* ── 1-Click Planted Anomaly Inspector ── */}
       <PlantedAnomalyInspector />
+
+      {/* ── Sovereign Parliament Gate Scrollytelling Reveal Banner ── */}
+      <div
+        className="metro-card"
+        style={{
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F0FDFB 100%)',
+          border: '1.5px solid rgba(0, 168, 150, 0.35)',
+          borderRadius: 18,
+          padding: '1.15rem 1.6rem',
+          marginBottom: '1.75rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1.25rem',
+          boxShadow: '0 6px 25px rgba(0, 168, 150, 0.08)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{
+            width: 46, height: 46, borderRadius: 14,
+            background: 'linear-gradient(135deg, #00A896, #028090)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#fff', boxShadow: '0 4px 15px rgba(0, 168, 150, 0.35)',
+            flexShrink: 0,
+          }}>
+            <Landmark size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.96rem', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span>The Sovereign Parliament Gate &amp; Neural Radar Reveal</span>
+              <span style={{ fontSize: '0.65rem', background: '#DCFCE7', color: '#166534', padding: '0.15rem 0.5rem', borderRadius: 999, fontWeight: 800, border: '1px solid #BBF7D0' }}>
+                SCROLLYTELLING CURTAIN
+              </span>
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '0.2rem' }}>
+              Democratic mandate on the outside (₹83,180 Cr across 543 constituencies) · Autonomous AI Sentinel Core on the inside
+            </div>
+          </div>
+        </div>
+        <Link
+          to="/#gate-reveal"
+          className="btn-metro-primary"
+          style={{ padding: '0.65rem 1.5rem', fontSize: '0.82rem', textDecoration: 'none', flexShrink: 0 }}
+        >
+          Inspect Gate Reveal →
+        </Link>
+      </div>
 
       {/* ── KPI Cards ── */}
       <div className="kpi-grid stagger-children" style={{ marginBottom: '1.5rem' }}>

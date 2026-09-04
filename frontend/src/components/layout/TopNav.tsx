@@ -2,10 +2,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import {
   LayoutDashboard, Map, FolderOpen, AlertTriangle,
-  Shield, Activity, Camera
+  Shield, Activity, Camera, Landmark
 } from 'lucide-react'
 
 const NAV = [
+  { to: '/',          icon: Landmark,        label: 'Parliament Gate' },
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/projects',  icon: FolderOpen,      label: 'Projects' },
   { to: '/map',       icon: Map,             label: 'Risk Map' },
@@ -41,7 +42,7 @@ export default function TopNav() {
   return (
     <nav className={`top-nav${scrolled ? ' scrolled' : ''}`}>
       {/* Brand */}
-      <Link to="/dashboard" className="nav-brand">
+      <Link to="/" className="nav-brand">
         <div className="nav-brand-mark">
           <Shield size={18} color="#fff" strokeWidth={2.5} />
         </div>
@@ -53,16 +54,19 @@ export default function TopNav() {
 
       {/* Nav links */}
       <div className="nav-links">
-        {NAV.map(({ to, icon: Icon, label }) => (
-          <Link
-            key={to}
-            to={to}
-            className={`nav-link${pathname.startsWith(to) ? ' active' : ''}`}
-          >
-            <Icon size={15} />
-            {label}
-          </Link>
-        ))}
+        {NAV.map(({ to, icon: Icon, label }) => {
+          const isActive = to === '/' ? pathname === '/' : pathname.startsWith(to)
+          return (
+            <Link
+              key={to}
+              to={to}
+              className={`nav-link${isActive ? ' active' : ''}`}
+            >
+              <Icon size={15} />
+              {label}
+            </Link>
+          )
+        })}
       </div>
 
       {/* Right side */}
