@@ -44,9 +44,17 @@ const STATUS_COLORS: Record<string, string> = {
 const CUSTOM_TOOLTIP = ({ active, payload }: any) => {
   if (active && payload?.length) {
     return (
-      <div style={{ background: '#0f1628', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '0.5rem 0.75rem', fontSize: '0.75rem' }}>
-        <div style={{ fontWeight: 700 }}>{payload[0].name}</div>
-        <div style={{ color: payload[0].fill || payload[0].color }}>{payload[0].value}</div>
+      <div style={{
+        background: '#FFFFFF',
+        border: '1.5px solid rgba(0, 168, 150, 0.25)',
+        boxShadow: '0 8px 24px rgba(15, 23, 42, 0.1)',
+        borderRadius: 10,
+        padding: '0.6rem 0.85rem',
+        fontSize: '0.78rem',
+        color: '#0F172A'
+      }}>
+        <div style={{ fontWeight: 800, color: '#0F172A', marginBottom: 2 }}>{payload[0].name}</div>
+        <div style={{ color: payload[0].fill || payload[0].color, fontWeight: 700 }}>{payload[0].value}</div>
       </div>
     )
   }
@@ -157,8 +165,8 @@ export default function DashboardPage() {
           <div className="chart-title">Project Status Distribution</div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={statusData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-              <XAxis dataKey="name" tick={{ fill: '#8b9dc3', fontSize: 11 }} />
-              <YAxis tick={{ fill: '#8b9dc3', fontSize: 11 }} />
+              <XAxis dataKey="name" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} />
+              <YAxis tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} />
               <Tooltip content={<CUSTOM_TOOLTIP />} />
               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                 {statusData.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
@@ -175,7 +183,7 @@ export default function DashboardPage() {
                 data={riskData} dataKey="value" nameKey="name"
                 cx="50%" cy="50%" outerRadius={80} paddingAngle={3}
                 label={({ name, value }) => `${name}: ${value}`}
-                labelLine={{ stroke: 'rgba(255,255,255,0.2)' }}
+                labelLine={{ stroke: '#94A3B8' }}
               >
                 {riskData.map((entry, i) => <Cell key={i} fill={RISK_COLORS[entry.name] || '#6b7280'} />)}
               </Pie>
@@ -192,18 +200,18 @@ export default function DashboardPage() {
           <AreaChart data={TREND_DATA} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="projectGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                <stop offset="5%" stopColor="#00A896" stopOpacity={0.25} />
+                <stop offset="95%" stopColor="#00A896" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="riskGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25} />
                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="month" tick={{ fill: '#8b9dc3', fontSize: 11 }} />
-            <YAxis tick={{ fill: '#8b9dc3', fontSize: 11 }} />
+            <XAxis dataKey="month" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} />
+            <YAxis tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} />
             <Tooltip content={<CUSTOM_TOOLTIP />} />
-            <Area type="monotone" dataKey="projects" name="Total Projects" stroke="#3b82f6" fill="url(#projectGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="projects" name="Total Projects" stroke="#00A896" fill="url(#projectGrad)" strokeWidth={2} />
             <Area type="monotone" dataKey="risk" name="At-Risk Projects" stroke="#ef4444" fill="url(#riskGrad)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
@@ -225,8 +233,8 @@ export default function DashboardPage() {
             <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>utilization rate</div>
           </div>
         </div>
-        <div className="risk-bar-bg" style={{ height: 10 }}>
-          <div className="risk-bar-fill" style={{ width: `${kpis.overallUtilizationPct}%`, background: 'linear-gradient(90deg, #3b82f6, #06b6d4)', height: '10px' }} />
+        <div className="risk-bar-bg" style={{ height: 10, background: '#E2E8F0', borderRadius: 999, overflow: 'hidden' }}>
+          <div className="risk-bar-fill" style={{ width: `${kpis.overallUtilizationPct}%`, background: 'linear-gradient(90deg, #00A896, #028090)', height: '10px' }} />
         </div>
       </div>
 
@@ -265,7 +273,7 @@ export default function DashboardPage() {
                   <td>{row.amount}</td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ flex: 1, height: 5, background: 'rgba(255,255,255,0.06)', borderRadius: 999, overflow: 'hidden' }}>
+                      <div style={{ flex: 1, height: 5, background: '#E2E8F0', borderRadius: 999, overflow: 'hidden' }}>
                         <div style={{ height: '100%', width: `${riskPct}%`, background: riskPct > 45 ? 'var(--risk-crit)' : riskPct > 35 ? 'var(--risk-high)' : 'var(--risk-med)', borderRadius: 999 }} />
                       </div>
                       <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', minWidth: 30 }}>{riskPct}%</span>

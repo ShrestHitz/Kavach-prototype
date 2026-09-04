@@ -1,9 +1,11 @@
 /**
- * MapPage — Risk Map with OpenStreetMap (no API key) + 30 dummy project markers
+ * MapPage — Risk Map with OpenStreetMap + Fading World Map Background Watermark
+ * Matches Kochi Metro "Explore the Network" aesthetic
  */
 import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import WorldMapWatermark from '../components/ui/WorldMapWatermark'
 
 interface MapProject {
   id: number
@@ -52,7 +54,10 @@ const DEMO_POINTS: MapProject[] = [
 ]
 
 const RISK_COLORS: Record<string, string> = {
-  CRITICAL: '#ef4444', HIGH: '#f97316', MEDIUM: '#f59e0b', LOW: '#10b981'
+  CRITICAL: '#EF4444',
+  HIGH:     '#F97316',
+  MEDIUM:   '#F59E0B',
+  LOW:      '#10B981'
 }
 
 function FlyToIndia() {
@@ -74,99 +79,163 @@ export default function MapPage() {
   }
 
   return (
-    <div className="fade-in">
-      <div className="page-header">
-        <div className="demo-banner">⚠ DEMO DATA — Synthetic Projects • Not Real Government Records</div>
-        <h1>Risk Map</h1>
-        <p className="page-subtitle">Spatial distribution of {DEMO_POINTS.length} projects with AI risk overlay across India</p>
-      </div>
+    <div
+      className="fade-in"
+      style={{
+        position: 'relative',
+        minHeight: 'calc(100vh - var(--nav-h))',
+        background: 'linear-gradient(180deg, #FFFFFF 0%, #F5FCFB 50%, #E6FAF8 100%)',
+        padding: '2rem 2.5rem',
+        borderRadius: 24,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Fading World Map Watermark matching Screenshot 2 */}
+      <WorldMapWatermark opacity={0.16} />
 
-      {/* Legend & Filter */}
-      <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-        <button
-          onClick={() => setFilter('ALL')}
-          className="btn btn-ghost"
-          style={{ fontSize: '0.75rem', background: filter === 'ALL' ? 'rgba(201,168,76,0.1)' : undefined, borderColor: filter === 'ALL' ? 'var(--gold)' : undefined, color: filter === 'ALL' ? 'var(--gold)' : undefined }}
-        >
-          ALL ({DEMO_POINTS.length})
-        </button>
-        {(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const).map(level => (
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div className="page-header" style={{ marginBottom: '1.5rem' }}>
+          <div className="demo-banner">
+            GEOSPATIAL INTELLIGENCE · NATIONWIDE MESH
+          </div>
+          <h1 style={{ color: '#0F172A', fontWeight: 900, fontSize: '2.5rem', letterSpacing: '-0.02em' }}>
+            National Risk Map
+          </h1>
+          <p className="page-subtitle" style={{ color: '#64748B', fontWeight: 500 }}>
+            Spatial distribution of {DEMO_POINTS.length} monitored projects with autonomous AI risk overlay across India
+          </p>
+        </div>
+
+        {/* Legend & Filter Buttons (Kochi Metro Style) */}
+        <div style={{ display: 'flex', gap: '0.65rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
           <button
-            key={level}
-            onClick={() => setFilter(level)}
-            className="btn btn-ghost"
+            onClick={() => setFilter('ALL')}
             style={{
-              fontSize: '0.75rem',
-              borderColor: RISK_COLORS[level],
-              color: filter === level ? '#fff' : RISK_COLORS[level],
-              background: filter === level ? `${RISK_COLORS[level]}30` : undefined,
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              padding: '0.45rem 1.15rem',
+              borderRadius: 999,
+              cursor: 'pointer',
+              border: filter === 'ALL' ? '1.5px solid #00A896' : '1px solid #E2E8F0',
+              background: filter === 'ALL' ? '#0F172A' : '#FFFFFF',
+              color: filter === 'ALL' ? '#FFFFFF' : '#334155',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              transition: 'all 0.15s',
             }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: RISK_COLORS[level], display: 'inline-block', marginRight: 4 }} />
-            {level} ({counts[level]})
+            ALL ({DEMO_POINTS.length})
           </button>
-        ))}
-      </div>
 
-      {/* Map — OpenStreetMap (no API key needed) */}
-      <div className="map-container" style={{ height: 520 }}>
-        <MapContainer center={[22.5, 82.0]} zoom={5} style={{ height: '100%', width: '100%', borderRadius: 16 }}>
-          <FlyToIndia />
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          {filtered.map(p => (
-            <CircleMarker
-              key={p.id}
-              center={[p.latitude, p.longitude]}
-              radius={p.riskLevel === 'CRITICAL' ? 12 : p.riskLevel === 'HIGH' ? 9 : 7}
-              pathOptions={{
-                color: RISK_COLORS[p.riskLevel],
-                fillColor: RISK_COLORS[p.riskLevel],
-                fillOpacity: 0.75,
-                weight: 2,
-                opacity: 1,
+          {(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const).map(level => {
+            const isSelected = filter === level
+            return (
+              <button
+                key={level}
+                onClick={() => setFilter(level)}
+                style={{
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  padding: '0.45rem 1.15rem',
+                  borderRadius: 999,
+                  cursor: 'pointer',
+                  border: isSelected ? `1.5px solid ${RISK_COLORS[level]}` : '1px solid #E2E8F0',
+                  background: isSelected ? RISK_COLORS[level] : '#FFFFFF',
+                  color: isSelected ? '#FFFFFF' : '#334155',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  transition: 'all 0.15s',
+                }}
+              >
+                <span style={{
+                  width: 8, height: 8, borderRadius: '50%',
+                  background: isSelected ? '#FFFFFF' : RISK_COLORS[level]
+                }} />
+                {level} ({counts[level]})
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Map Container (Clean White Card Frame with Rounded Corners) */}
+        <div
+          className="map-container"
+          style={{
+            height: 540,
+            background: '#FFFFFF',
+            border: '1.5px solid rgba(0, 168, 150, 0.25)',
+            boxShadow: '0 20px 50px rgba(0, 168, 150, 0.1), 0 4px 12px rgba(15, 23, 42, 0.04)',
+            borderRadius: 20,
+            overflow: 'hidden',
+          }}
+        >
+          <MapContainer center={[22.5, 82.0]} zoom={5} style={{ height: '100%', width: '100%' }}>
+            <FlyToIndia />
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            {filtered.map(p => (
+              <CircleMarker
+                key={p.id}
+                center={[p.latitude, p.longitude]}
+                radius={p.riskLevel === 'CRITICAL' ? 12 : p.riskLevel === 'HIGH' ? 9 : 7}
+                pathOptions={{
+                  color: RISK_COLORS[p.riskLevel],
+                  fillColor: RISK_COLORS[p.riskLevel],
+                  fillOpacity: 0.8,
+                  weight: 2,
+                  opacity: 1,
+                }}
+              >
+                <Popup>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 220, padding: '0.25rem' }}>
+                    <div style={{ fontWeight: 800, marginBottom: 4, fontSize: 13, color: '#0F172A' }}>{p.name}</div>
+                    <div style={{ fontSize: 11, color: '#64748B', marginBottom: 8 }}>{p.stateName} · {p.status.replace('_', ' ')}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{
+                        background: `${RISK_COLORS[p.riskLevel]}15`, color: RISK_COLORS[p.riskLevel],
+                        border: `1px solid ${RISK_COLORS[p.riskLevel]}40`, borderRadius: 999,
+                        padding: '2px 8px', fontSize: 10, fontWeight: 800,
+                      }}>
+                        {p.riskLevel} · {p.riskScore}/100
+                      </span>
+                      <span style={{ fontSize: 12, fontWeight: 800, color: '#0F172A' }}>{p.amount}</span>
+                    </div>
+                  </div>
+                </Popup>
+              </CircleMarker>
+            ))}
+          </MapContainer>
+        </div>
+
+        {/* Stats Row */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginTop: '1.5rem' }}>
+          {(Object.entries(counts) as [string, number][]).map(([level, count]) => (
+            <div
+              key={level}
+              className="metro-card"
+              style={{
+                background: '#FFFFFF',
+                border: `1px solid ${RISK_COLORS[level]}30`,
+                padding: '1.15rem 1.4rem',
+                borderRadius: 16,
+                boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
               }}
             >
-              <Popup>
-                <div style={{ fontFamily: 'Inter, sans-serif', minWidth: 220, padding: '0.25rem' }}>
-                  <div style={{ fontWeight: 700, marginBottom: 6, fontSize: 13, color: '#0f172a' }}>{p.name}</div>
-                  <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6 }}>{p.stateName} · {p.status.replace('_', ' ')}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{
-                      background: `${RISK_COLORS[p.riskLevel]}20`, color: RISK_COLORS[p.riskLevel],
-                      border: `1px solid ${RISK_COLORS[p.riskLevel]}60`, borderRadius: 999,
-                      padding: '2px 8px', fontSize: 10, fontWeight: 800,
-                    }}>
-                      {p.riskLevel} · {p.riskScore}/100
-                    </span>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#0f172a' }}>{p.amount}</span>
-                  </div>
-                </div>
-              </Popup>
-            </CircleMarker>
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, color: RISK_COLORS[level], textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
+                {level} Risk
+              </div>
+              <div style={{ fontSize: '2.2rem', fontWeight: 900, color: RISK_COLORS[level], lineHeight: 1 }}>
+                {count}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem', fontWeight: 600 }}>
+                monitored projects
+              </div>
+            </div>
           ))}
-        </MapContainer>
-      </div>
-
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginTop: '1rem' }}>
-        {(Object.entries(counts) as [string, number][]).map(([level, count]) => (
-          <div key={level} className="card" style={{
-            background: `${RISK_COLORS[level]}08`,
-            border: `1px solid ${RISK_COLORS[level]}25`,
-            padding: '0.85rem 1rem',
-          }}>
-            <div style={{ fontSize: '0.62rem', fontWeight: 800, color: RISK_COLORS[level], textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.3rem' }}>
-              {level} Risk
-            </div>
-            <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.05em', color: RISK_COLORS[level] }}>
-              {count}
-            </div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>projects</div>
-          </div>
-        ))}
+        </div>
       </div>
     </div>
   )

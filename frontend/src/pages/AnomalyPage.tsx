@@ -154,14 +154,15 @@ export default function AnomalyPage() {
       )}
 
       {/* Tab selector */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-        {([['demo', '🔬 Demo Scenarios (SIH)'], ['live', '📡 Live Anomalies (ML)']] as const).map(([key, label]) => (
+      <div style={{ display: 'flex', gap: '0.65rem', marginBottom: '1.5rem' }}>
+        {([['demo', '🔬 Demo Scenarios (Benchmark)'], ['live', '📡 Live Anomalies (ML Radar)']] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)} style={{
-            padding: '0.5rem 1.2rem', borderRadius: 8, fontSize: '0.82rem',
-            fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s',
-            background: tab === key ? 'var(--gold)' : 'var(--card)',
-            color: tab === key ? '#000' : 'var(--text)',
-            border: tab === key ? 'none' : '1px solid var(--border)',
+            padding: '0.55rem 1.3rem', borderRadius: 999, fontSize: '0.82rem',
+            fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s',
+            background: tab === key ? '#00A896' : '#FFFFFF',
+            color: tab === key ? '#FFFFFF' : '#334155',
+            border: tab === key ? '1.5px solid #00A896' : '1px solid #CBD5E1',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
           }}>
             {label}
           </button>
@@ -172,8 +173,8 @@ export default function AnomalyPage() {
       {tab === 'demo' && (
         <div style={{ display: 'grid', gap: '1.25rem' }}>
           {DEMO_SCENARIOS.map((s, i) => (
-            <div key={i} className="card" style={{ borderColor: `${s.color}25`, position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: s.color }} />
+            <div key={i} className="card" style={{ borderColor: `${s.color}35`, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3.5, background: s.color }} />
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1.5rem', alignItems: 'start' }}>
                 <div>
@@ -183,10 +184,10 @@ export default function AnomalyPage() {
                     </div>
                     <div>
                       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.2rem', alignItems: 'center' }}>
-                        <code style={{ fontSize: '0.68rem', background: `${s.color}15`, color: s.color, padding: '0.15rem 0.5rem', borderRadius: 4 }}>{s.code}</code>
-                        <span style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '0.1rem 0.45rem', borderRadius: 4, color: 'var(--text-muted)' }}>{s.engine}</span>
+                        <code style={{ fontSize: '0.68rem', background: `${s.color}15`, color: s.color, padding: '0.15rem 0.5rem', borderRadius: 4, fontWeight: 700 }}>{s.code}</code>
+                        <span style={{ fontSize: '0.68rem', background: '#F1F5F9', border: '1px solid #E2E8F0', padding: '0.12rem 0.5rem', borderRadius: 4, color: '#475569', fontWeight: 600 }}>{s.engine}</span>
                       </div>
-                      <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem' }}>{s.title}</div>
+                      <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.05rem', color: '#0F172A' }}>{s.title}</div>
                     </div>
                   </div>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.7, marginBottom: '1rem' }}>{s.desc}</p>

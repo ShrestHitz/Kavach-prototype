@@ -76,7 +76,7 @@ function RiskGauge({ score, level }: { score: number; level: string }) {
   return (
     <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 160, height: 160 }}>
       <svg width="160" height="160" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="80" cy="80" r="52" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="12" />
+        <circle cx="80" cy="80" r="52" fill="none" stroke="#E2E8F0" strokeWidth="12" />
         <circle
           cx="80" cy="80" r="52" fill="none"
           stroke={color} strokeWidth="12"
@@ -265,26 +265,27 @@ export default function PhotoVerificationPage() {
             <div
               onClick={() => setSelectedPreset('custom')}
               style={{
-                padding: '0.75rem 0.95rem', borderRadius: 10, marginBottom: '0.4rem', cursor: 'pointer',
-                border: selectedPreset === 'custom' ? '1.5px solid var(--km-cyan)' : '1px solid var(--glass-b)',
-                background: selectedPreset === 'custom' ? 'rgba(0,168,150,0.12)' : 'transparent',
+                padding: '0.85rem 1rem', borderRadius: 12, marginBottom: '0.5rem', cursor: 'pointer',
+                border: selectedPreset === 'custom' ? '1.5px solid #00A896' : '1px solid #E2E8F0',
+                background: selectedPreset === 'custom' ? 'rgba(0,168,150,0.1)' : '#FFFFFF',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
                 transition: 'all 0.15s',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <div style={{ fontSize: '0.84rem', fontWeight: 700, color: selectedPreset === 'custom' ? '#FFFFFF' : 'var(--text)' }}>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: selectedPreset === 'custom' ? '#008E80' : '#0F172A' }}>
                     Custom File Inspection (Clean / No Preset)
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.15rem' }}>
                     Inspect uploaded photos without assigning pre-configured vendors or fake contractors
                   </div>
                 </div>
-                {selectedPreset === 'custom' && <CheckCircle2 size={16} color="var(--km-cyan)" />}
+                {selectedPreset === 'custom' && <CheckCircle2 size={17} color="#00A896" />}
               </div>
             </div>
 
-            <div style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0.6rem 0 0.3rem' }}>
+            <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0.75rem 0 0.4rem' }}>
               Or Test With Benchmark Scenarios:
             </div>
 
@@ -293,18 +294,19 @@ export default function PhotoVerificationPage() {
                 key={i}
                 onClick={() => setSelectedPreset(i)}
                 style={{
-                  padding: '0.7rem 0.9rem', borderRadius: 10, marginBottom: '0.4rem', cursor: 'pointer',
-                  border: selectedPreset === i ? '1.5px solid var(--km-cyan)' : '1px solid var(--glass-b)',
-                  background: selectedPreset === i ? 'rgba(0,168,150,0.12)' : 'transparent',
+                  padding: '0.75rem 0.95rem', borderRadius: 12, marginBottom: '0.45rem', cursor: 'pointer',
+                  border: selectedPreset === i ? '1.5px solid #00A896' : '1px solid #E2E8F0',
+                  background: selectedPreset === i ? 'rgba(0,168,150,0.1)' : '#FFFFFF',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
                   transition: 'all 0.15s',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: selectedPreset === i ? 'var(--km-cyan)' : 'var(--text)' }}>{p.label}</div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>{p.desc}</div>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 700, color: selectedPreset === i ? '#008E80' : '#0F172A' }}>{p.label}</div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.15rem' }}>{p.desc}</div>
                   </div>
-                  {selectedPreset === i && <CheckCircle2 size={16} color="var(--km-cyan)" />}
+                  {selectedPreset === i && <CheckCircle2 size={17} color="#00A896" />}
                 </div>
               </div>
             ))}
@@ -379,15 +381,15 @@ export default function PhotoVerificationPage() {
             ['Project Type',     activeMeta.projectType],
             ['Vendor',          activeMeta.vendor],
           ].map(([k, v]) => (
-            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.8rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>{k}</span>
-              <span style={{ fontWeight: 600, color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>{v}</span>
+            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid #F1F5F9', fontSize: '0.8rem' }}>
+              <span style={{ color: '#64748B', fontWeight: 600 }}>{k}</span>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>{v}</span>
             </div>
           ))}
 
           {selectedPreset === 'custom' && (
-            <div style={{ padding: '0.85rem', background: 'rgba(0,168,150,0.08)', borderRadius: 10, border: '1px solid rgba(0,210,196,0.2)' }}>
-              <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--km-cyan)', fontWeight: 700, marginBottom: '0.35rem', textTransform: 'uppercase' }}>
+            <div style={{ padding: '0.95rem', background: '#F0FDFB', borderRadius: 12, border: '1px solid rgba(0,168,150,0.25)' }}>
+              <label style={{ display: 'block', fontSize: '0.7rem', color: '#00A896', fontWeight: 800, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Optional: Declare Vendor / Contractor Name
               </label>
               <input
@@ -396,19 +398,19 @@ export default function PhotoVerificationPage() {
                 value={customVendor}
                 onChange={e => setCustomVendor(e.target.value)}
                 style={{
-                  width: '100%', padding: '0.45rem 0.75rem', borderRadius: 8,
-                  background: 'rgba(5,11,20,0.7)', border: '1px solid var(--glass-b)',
-                  color: '#fff', fontSize: '0.8rem', outline: 'none'
+                  width: '100%', padding: '0.55rem 0.85rem', borderRadius: 8,
+                  background: '#FFFFFF', border: '1.5px solid #CBD5E1',
+                  color: '#0F172A', fontSize: '0.82rem', outline: 'none'
                 }}
               />
-              <span style={{ display: 'block', fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
+              <span style={{ display: 'block', fontSize: '0.68rem', color: '#64748B', marginTop: '0.35rem', fontWeight: 500 }}>
                 No vendor will be invented or displayed unless provided here.
               </span>
             </div>
           )}
 
-          <div style={{ marginTop: 'auto', padding: '0.85rem', background: 'rgba(0,168,150,0.08)', border: '1px solid rgba(0,210,196,0.2)', borderRadius: 10, fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--text)' }}>Vigilance checks:</strong> GPS geotag extraction · Pairwise Haversine distance · SHA-256 duplicate detection · Timestamp window validation · Metadata integrity
+          <div style={{ marginTop: 'auto', padding: '0.85rem', background: '#F0FDFB', border: '1px solid rgba(0,168,150,0.25)', borderRadius: 12, fontSize: '0.75rem', color: '#334155', lineHeight: 1.6 }}>
+            <strong style={{ color: '#0F172A' }}>Vigilance checks:</strong> GPS geotag extraction · Pairwise Haversine distance · SHA-256 duplicate detection · Timestamp window validation · Metadata integrity
           </div>
         </div>
       </div>
