@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Clock, IndianRupee, Zap, Activity } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
 
+import PlantedAnomalyInspector from '../components/ui/PlantedAnomalyInspector'
+
 // ── Static demo KPIs — no API needed ─────────────────────────
 const DEMO_KPIS = {
   totalProjects: 558,
@@ -97,6 +99,9 @@ export default function DashboardPage() {
 
       {/* ── India stripe ── */}
       <div className="india-stripe" style={{ marginBottom: '1.5rem' }} />
+
+      {/* ── 1-Click Planted Anomaly Inspector ── */}
+      <PlantedAnomalyInspector />
 
       {/* ── KPI Cards ── */}
       <div className="kpi-grid stagger-children" style={{ marginBottom: '1.5rem' }}>

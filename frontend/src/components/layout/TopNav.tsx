@@ -46,8 +46,8 @@ export default function TopNav() {
           <Shield size={18} color="#fff" strokeWidth={2.5} />
         </div>
         <div className="nav-brand-text">
-          <div className="nav-brand-name">KAVACH 2.0</div>
-          <div className="nav-brand-sub">MPLADS Sentinel · SIH 2026</div>
+          <div className="nav-brand-name">KAVACH</div>
+          <div className="nav-brand-sub">MoSPI · MPLADS AI Vigilance System</div>
         </div>
       </Link>
 

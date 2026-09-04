@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { AlertTriangle, Zap, Copy, Camera, Clock, RefreshCw, Activity, ExternalLink } from 'lucide-react'
 import api from '../api/client'
+import PlantedAnomalyInspector from '../components/ui/PlantedAnomalyInspector'
 
 // ── Types ──────────────────────────────────────────────────────
 interface LiveAnomaly {
@@ -98,7 +99,7 @@ export default function AnomalyPage() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <div className="demo-banner">⚠ CONTROLLED DEMO — SIH 2026 Presentation</div>
+            <div className="demo-banner">VIGILANCE RADAR · ACTIVE SURVEILLANCE MESH</div>
             <h1>Anomaly Detection</h1>
             <p className="page-subtitle">4 AI engines · 558 projects scored · Live results from trained models</p>
           </div>
@@ -131,6 +132,9 @@ export default function AnomalyPage() {
           </div>
         </div>
       </div>
+
+      {/* ── 1-Click Planted Anomaly Inspector ── */}
+      <PlantedAnomalyInspector />
 
       {/* Live Stats Row */}
       {batch && (
@@ -258,9 +262,9 @@ export default function AnomalyPage() {
         </div>
       )}
 
-      {/* Judge note */}
-      <div style={{ marginTop: '2rem', padding: '1rem 1.5rem', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.15)', borderRadius: 12, fontSize: '0.78rem', color: 'var(--text-dim)' }}>
-        <strong style={{ color: 'var(--text)' }}>For SIH Judges:</strong> Demo tab shows 4 seeded scenarios. Live tab queries the running <code style={{ color: 'var(--gold)' }}>IsolationForest</code> model trained on 558 synthetic projects (Accuracy: 92.86%, AUC: 94.8%).
+      {/* Anomaly Detection Engine Context */}
+      <div style={{ marginTop: '2rem', padding: '1rem 1.5rem', background: 'rgba(0,168,150,0.06)', border: '1px solid rgba(0,210,196,0.2)', borderRadius: 14, fontSize: '0.8rem', color: 'var(--text-dim)' }}>
+        <strong style={{ color: 'var(--text)' }}>Vigilance Radar Note:</strong> The platform analyzes multi-vector signals combining <code style={{ color: 'var(--km-cyan)' }}>IsolationForest</code> (unsupervised cost & payment spike detection) and <code style={{ color: 'var(--km-cyan)' }}>XGBoost</code> models for early warning alerts.
       </div>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

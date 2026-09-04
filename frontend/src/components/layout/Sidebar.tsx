@@ -39,9 +39,9 @@ export default function Sidebar() {
           <div style={{ width: 32, height: 32, borderRadius: '8px', background: 'linear-gradient(135deg,#3b82f6,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Shield size={16} color="#fff" />
           </div>
-          <h2>Kavach 2.0</h2>
+          <h2>KAVACH</h2>
         </div>
-        <p>MPLADS AI Platform · SIH 2026</p>
+        <p>MPLADS AI Vigilance System</p>
       </div>
 
       {/* Nav */}

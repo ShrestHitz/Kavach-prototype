@@ -149,7 +149,10 @@ export default function PhotoVerificationPage() {
   const [loading, setLoading] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [dragOver, setDragOver] = useState(false)
-  const [selectedPreset, setSelectedPreset] = useState(0)
+  const [selectedPreset, setSelectedPreset] = useState<number | 'custom'>('custom')
+  const [customVendor, setCustomVendor] = useState('')
+  const [customState, setCustomState] = useState('Uttar Pradesh')
+  const [customType, setCustomType] = useState('road')
   const [progress, setProgress] = useState(0)
   const fileRef = useRef<HTMLInputElement>(null)
   const resultRef = useRef<HTMLDivElement>(null)
@@ -160,17 +163,32 @@ export default function PhotoVerificationPage() {
     setReport(null)
     setProgress(10)
 
-    const preset = DEMO_PRESETS[selectedPreset]
-    const meta: ProjectMeta = {
-      projectCode: preset.projectCode,
-      declaredLat: preset.declaredLat,
-      declaredLon: preset.declaredLon,
-      sanctionDate: preset.sanctionDate,
-      milestoneDays: preset.milestoneDays,
-      unitCost: preset.unitCost,
-      state: preset.state,
-      projectType: preset.projectType,
-      vendor: preset.vendor,
+    let meta: ProjectMeta
+    if (selectedPreset === 'custom') {
+      meta = {
+        projectCode: `UPLOAD-${Date.now().toString().slice(-4)}`,
+        declaredLat: 26.8467,
+        declaredLon: 80.9462,
+        sanctionDate: new Date(Date.now() - 60 * 86400000).toISOString().split('T')[0],
+        milestoneDays: 120,
+        unitCost: 0,
+        state: customState,
+        projectType: customType,
+        vendor: customVendor.trim(), // Empty if user did not specify!
+      }
+    } else {
+      const preset = DEMO_PRESETS[selectedPreset]
+      meta = {
+        projectCode: preset.projectCode,
+        declaredLat: preset.declaredLat,
+        declaredLon: preset.declaredLon,
+        sanctionDate: preset.sanctionDate,
+        milestoneDays: preset.milestoneDays,
+        unitCost: preset.unitCost,
+        state: preset.state,
+        projectType: preset.projectType,
+        vendor: preset.vendor,
+      }
     }
 
     // Fake progress steps
@@ -194,7 +212,7 @@ export default function PhotoVerificationPage() {
       console.error(err)
       setLoading(false)
     }
-  }, [selectedPreset])
+  }, [selectedPreset, customVendor, customState, customType])
 
   const handleFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return
@@ -210,16 +228,26 @@ export default function PhotoVerificationPage() {
     handleFiles(e.dataTransfer.files)
   }
 
-  const preset = DEMO_PRESETS[selectedPreset]
+  const activeMeta = selectedPreset === 'custom' ? {
+    projectCode: 'LIVE-UPLOAD',
+    declaredLat: 26.8467,
+    declaredLon: 80.9462,
+    sanctionDate: 'Current Cycle',
+    milestoneDays: 120,
+    unitCost: 0,
+    state: customState,
+    projectType: customType,
+    vendor: customVendor.trim() ? customVendor.trim() : 'Not Specified',
+  } : DEMO_PRESETS[selectedPreset]
 
   return (
     <div className="fade-in" style={{ paddingBottom: '4rem' }}>
       {/* ── Page Header ── */}
       <div className="page-header" style={{ marginBottom: '2rem' }}>
-        <div className="demo-banner">⚠ DEMO DATA — Synthetic Projects • Not Real Government Records</div>
+        <div className="demo-banner">AUTONOMOUS GEOSPATIAL LAB · EVIDENCE VERIFICATION</div>
         <h1>Photo Verification Lab</h1>
         <p className="page-subtitle">
-          Multi-photo geospatial analysis · GPS clustering · Haversine distance · Z-score cost · Vendor monopoly detection
+          Multi-photo geospatial analysis · GPS clustering · Haversine distance · Z-score cost · Metadata integrity check
         </p>
       </div>
 
@@ -227,28 +255,56 @@ export default function PhotoVerificationPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
         {/* Left: Preset selector + upload zone */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Preset */}
+          {/* Preset / Mode selector */}
           <div className="card">
-            <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-              Project Context (SIH Demo Preset)
+            <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--km-cyan)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+              Verification Mode
             </div>
+            
+            {/* Custom file upload option */}
+            <div
+              onClick={() => setSelectedPreset('custom')}
+              style={{
+                padding: '0.75rem 0.95rem', borderRadius: 10, marginBottom: '0.4rem', cursor: 'pointer',
+                border: selectedPreset === 'custom' ? '1.5px solid var(--km-cyan)' : '1px solid var(--glass-b)',
+                background: selectedPreset === 'custom' ? 'rgba(0,168,150,0.12)' : 'transparent',
+                transition: 'all 0.15s',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ fontSize: '0.84rem', fontWeight: 700, color: selectedPreset === 'custom' ? '#FFFFFF' : 'var(--text)' }}>
+                    Custom File Inspection (Clean / No Preset)
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>
+                    Inspect uploaded photos without assigning pre-configured vendors or fake contractors
+                  </div>
+                </div>
+                {selectedPreset === 'custom' && <CheckCircle2 size={16} color="var(--km-cyan)" />}
+              </div>
+            </div>
+
+            <div style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0.6rem 0 0.3rem' }}>
+              Or Test With Benchmark Scenarios:
+            </div>
+
             {DEMO_PRESETS.map((p, i) => (
               <div
                 key={i}
                 onClick={() => setSelectedPreset(i)}
                 style={{
                   padding: '0.7rem 0.9rem', borderRadius: 10, marginBottom: '0.4rem', cursor: 'pointer',
-                  border: selectedPreset === i ? '1px solid var(--gold)' : '1px solid var(--glass-b)',
-                  background: selectedPreset === i ? 'rgba(201,168,76,0.06)' : 'transparent',
+                  border: selectedPreset === i ? '1.5px solid var(--km-cyan)' : '1px solid var(--glass-b)',
+                  background: selectedPreset === i ? 'rgba(0,168,150,0.12)' : 'transparent',
                   transition: 'all 0.15s',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: selectedPreset === i ? 'var(--gold)' : 'var(--text)' }}>{p.label}</div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: selectedPreset === i ? 'var(--km-cyan)' : 'var(--text)' }}>{p.label}</div>
                     <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>{p.desc}</div>
                   </div>
-                  {selectedPreset === i && <CheckCircle2 size={16} color="var(--gold)" />}
+                  {selectedPreset === i && <CheckCircle2 size={16} color="var(--km-cyan)" />}
                 </div>
               </div>
             ))}
@@ -309,28 +365,50 @@ export default function PhotoVerificationPage() {
 
         {/* Right: Project meta summary */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--km-cyan)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             Analysis Parameters
           </div>
 
           {[
-            ['Project Code',     preset.projectCode],
-            ['Declared Location', `${preset.declaredLat}°N, ${preset.declaredLon}°E`],
-            ['Sanction Date',    preset.sanctionDate],
-            ['Milestone Window', `${preset.milestoneDays} days`],
-            ['Declared Unit Cost', `₹${preset.unitCost} Lakhs`],
-            ['State',            preset.state],
-            ['Project Type',     preset.projectType],
-            ['Vendor',          preset.vendor],
+            ['Project Code',     activeMeta.projectCode],
+            ['Declared Location', `${activeMeta.declaredLat}°N, ${activeMeta.declaredLon}°E`],
+            ['Sanction Date',    activeMeta.sanctionDate],
+            ['Milestone Window', `${activeMeta.milestoneDays} days`],
+            ['Declared Unit Cost', activeMeta.unitCost > 0 ? `₹${activeMeta.unitCost} Lakhs` : 'Not Applicable (Photo-only inspection)'],
+            ['State',            activeMeta.state],
+            ['Project Type',     activeMeta.projectType],
+            ['Vendor',          activeMeta.vendor],
           ].map(([k, v]) => (
             <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.8rem' }}>
               <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>{k}</span>
-              <span style={{ fontWeight: 600, color: 'var(--text)', fontFamily: 'monospace', fontSize: '0.75rem' }}>{v}</span>
+              <span style={{ fontWeight: 600, color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>{v}</span>
             </div>
           ))}
 
-          <div style={{ marginTop: 'auto', padding: '0.85rem', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.15)', borderRadius: 10, fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--text)' }}>Analysis checks:</strong> GPS geotag extraction · Haversine clustering (30m threshold) · SHA-256 duplicate detection · Timestamp window validation · Z-score cost baseline · Vendor monopoly (25% threshold)
+          {selectedPreset === 'custom' && (
+            <div style={{ padding: '0.85rem', background: 'rgba(0,168,150,0.08)', borderRadius: 10, border: '1px solid rgba(0,210,196,0.2)' }}>
+              <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--km-cyan)', fontWeight: 700, marginBottom: '0.35rem', textTransform: 'uppercase' }}>
+                Optional: Declare Vendor / Contractor Name
+              </label>
+              <input
+                type="text"
+                placeholder="Leave blank if unknown / not applicable"
+                value={customVendor}
+                onChange={e => setCustomVendor(e.target.value)}
+                style={{
+                  width: '100%', padding: '0.45rem 0.75rem', borderRadius: 8,
+                  background: 'rgba(5,11,20,0.7)', border: '1px solid var(--glass-b)',
+                  color: '#fff', fontSize: '0.8rem', outline: 'none'
+                }}
+              />
+              <span style={{ display: 'block', fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
+                No vendor will be invented or displayed unless provided here.
+              </span>
+            </div>
+          )}
+
+          <div style={{ marginTop: 'auto', padding: '0.85rem', background: 'rgba(0,168,150,0.08)', border: '1px solid rgba(0,210,196,0.2)', borderRadius: 10, fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+            <strong style={{ color: 'var(--text)' }}>Vigilance checks:</strong> GPS geotag extraction · Pairwise Haversine distance · SHA-256 duplicate detection · Timestamp window validation · Metadata integrity
           </div>
         </div>
       </div>
@@ -369,7 +447,7 @@ export default function PhotoVerificationPage() {
                      report.riskLevel === 'MEDIUM'   ? '🔶 Medium Risk' :
                      report.riskLevel === 'LOW'      ? '🔷 Low Risk' : '✅ Verification Passed'}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{report.photos.length} photo(s) analysed · {preset.projectCode}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{report.photos.length} photo(s) analysed · {activeMeta.projectCode}</div>
                 </div>
               </div>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.7, marginBottom: '1rem' }}>{report.summary}</p>
@@ -579,17 +657,19 @@ export default function PhotoVerificationPage() {
           </div>
 
           {/* ── Audit report block ── */}
-          <div className="card" style={{ borderColor: 'rgba(201,168,76,0.2)', background: 'rgba(201,168,76,0.03)' }}>
+          <div className="card" style={{ borderColor: 'rgba(0,168,150,0.3)', background: 'rgba(0,168,150,0.04)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-              <Shield size={18} color="var(--gold)" />
-              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: 'var(--gold)' }}>
-                AUDIT REPORT — {preset.projectCode}
+              <Shield size={18} color="var(--km-cyan)" />
+              <div style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.05em', color: '#FFFFFF' }}>
+                AUDIT DOSSIER — {activeMeta.projectCode}
               </div>
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.8, fontFamily: 'monospace' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.8, fontFamily: 'var(--font-mono)' }}>
               <div>Generated: {new Date().toISOString()}</div>
-              <div>Project: {preset.projectCode} · {preset.state} · {preset.projectType}</div>
-              <div>Vendor: {preset.vendor}</div>
+              <div>Project: {activeMeta.projectCode} · {activeMeta.state} · {activeMeta.projectType}</div>
+              {activeMeta.vendor && activeMeta.vendor !== 'Not Specified' && (
+                <div>Vendor: {activeMeta.vendor}</div>
+              )}
               <div>Photos Analysed: {report.photos.length}</div>
               <div>Composite Risk Score: {report.riskScore}/100 ({report.riskLevel})</div>
               <div style={{ margin: '0.5rem 0' }}>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
@@ -601,7 +681,7 @@ export default function PhotoVerificationPage() {
                   </>
               }
               <div style={{ margin: '0.5rem 0' }}>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-              <div style={{ color: 'var(--text-muted)' }}>KAVACH 2.0 · MoSPI MPLADS Sentinel · SIH 2026</div>
+              <div style={{ color: 'var(--text-muted)' }}>KAVACH · MoSPI MPLADS AI Vigilance System</div>
             </div>
           </div>
         </div>

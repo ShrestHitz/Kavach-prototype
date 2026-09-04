@@ -311,7 +311,7 @@ export async function analyzePhotoBatch(files: File[], meta: ProjectMeta): Promi
   const ts = analyzeTimestamps(photos, meta)
   const dup = analyzeDuplicates(photos)
   const cost = meta.unitCost > 0 ? analyzeCost(meta) : null
-  const vendor = meta.vendor ? analyzeVendor(meta) : null
+  const vendor = meta.vendor && meta.vendor.trim() !== '' && meta.vendor !== 'Not Specified' ? analyzeVendor(meta) : null
   const { score, level, anomalies } = computeRisk(geo, ts, dup, cost, vendor)
 
   const summary =

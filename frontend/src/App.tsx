@@ -122,21 +122,21 @@ function KavachLoader() {
 
         <div>
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.2rem',
-            letterSpacing: '0.2em', color: '#c9a84c',
-            textShadow: '0 0 40px rgba(201,168,76,0.4)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '2.5rem', fontWeight: 900,
+            letterSpacing: '0.15em', color: '#FFFFFF',
+            textShadow: '0 0 30px rgba(0,210,196,0.5)',
             lineHeight: 1,
-          }}>KAVACH 2.0</div>
-          <div style={{ fontSize: '0.65rem', color: 'rgba(245,240,232,0.4)', letterSpacing: '0.25em', marginTop: '0.4rem', textTransform: 'uppercase' }}>
-            MPLADS SENTINEL · MoSPI SIH 2026
+          }}>KAVACH</div>
+          <div style={{ fontSize: '0.68rem', color: 'var(--km-cyan)', letterSpacing: '0.2em', marginTop: '0.5rem', textTransform: 'uppercase', fontWeight: 700 }}>
+            GOVERNMENT OF INDIA · MOSPI · MPLADS AI VIGILANCE SYSTEM
           </div>
         </div>
 
-        {/* Gold progress bar */}
-        <div style={{ width: 180, height: 2, background: 'rgba(201,168,76,0.15)', borderRadius: 999, overflow: 'hidden' }}>
+        {/* Teal progress bar */}
+        <div style={{ width: 190, height: 3, background: 'rgba(0,168,150,0.2)', borderRadius: 999, overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: 999,
-            background: 'linear-gradient(90deg, #c9a84c, #FF9933)',
+            background: 'linear-gradient(90deg, #00A896, #00D2C4, #38BDF8)',
             animation: 'loadbar 1.3s ease-in-out forwards',
           }} />
         </div>
