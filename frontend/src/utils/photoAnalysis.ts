@@ -344,19 +344,23 @@ export async function analyzePhotoBatch(files: File[], meta: ProjectMeta): Promi
 
     let res = await fetch('/api/ml/verify-photo-upload', { method: 'POST', body: formData }).catch(() => null)
     if (!res || !res.ok) {
-      res = await fetch('http://localhost:8001/api/ml/verify-photo-upload', { method: 'POST', body: formData }).catch(() => null)
-    }
-    if (!res || !res.ok) {
       res = await fetch('/api/ml/photo/verify', { method: 'POST', body: formData }).catch(() => null)
     }
-    if (!res || !res.ok) {
-      res = await fetch('http://localhost:8000/api/ml/verify-photo-upload', { method: 'POST', body: formData }).catch(() => null)
+    // Only probe localhost ports if running on HTTP (local development)
+    if ((!res || !res.ok) && typeof window !== 'undefined' && window.location.protocol === 'http:') {
+      res = await fetch('http://localhost:8001/api/ml/verify-photo-upload', { method: 'POST', body: formData }).catch(() => null)
+      if (!res || !res.ok) {
+        res = await fetch('http://localhost:8000/api/ml/verify-photo-upload', { method: 'POST', body: formData }).catch(() => null)
+      }
     }
     if (res && res.ok) {
-      mlResult = await res.json()
+      const contentType = res.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        mlResult = await res.json()
+      }
     }
   } catch (err) {
-    console.warn('ML photo verification service unreachable:', err)
+    console.warn('ML photo verification service unreachable, falling back to pure browser engine:', err)
   }
 
   // If ML service gave a response, use its authoritative AI + OCR + Geospatial results!

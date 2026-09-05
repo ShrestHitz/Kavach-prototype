@@ -1,0 +1,18 @@
+{
+  "name": "kavach-sentinel-platform",
+  "version": "2.0.0",
+  "private": true,
+  "description": "KAVACH 2.0 / MPLADS Sentinel — Autonomous AI Project Intelligence & Fraud Prevention Platform",
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "dev": "npm --prefix frontend run dev",
+    "preview": "npm --prefix frontend run preview"
+  },
+  "keywords": [
+    "civic-tech",
+    "fraud-prevention",
+    "machine-learning",
+    "computer-vision",
+    "mplads"
+  ]
+}

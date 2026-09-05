@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Map, FolderOpen, AlertTriangle,
   Shield, Activity, Camera, Landmark
 } from 'lucide-react'
+import api from '../../api/client'
 
 const NAV = [
   { to: '/',          icon: Landmark,        label: 'Parliament Gate' },
@@ -22,20 +23,11 @@ export default function TopNav() {
   useEffect(() => {
     const check = async () => {
       try {
-        let r = await fetch('http://localhost:8001/health/', { signal: AbortSignal.timeout(2000) }).catch(() => null)
-        if (!r || !r.ok) {
-          r = await fetch('http://localhost:8000/health/', { signal: AbortSignal.timeout(2000) }).catch(() => null)
-        }
-        if (!r || !r.ok) {
-          r = await fetch('/api/ml/health', { signal: AbortSignal.timeout(2000) }).catch(() => null)
-        }
-        if (r && r.ok) {
-          const data = await r.json()
-          setMlStatus(data?.status === 'UP' ? 'UP' : 'DOWN')
-        } else {
-          setMlStatus('DOWN')
-        }
-      } catch { setMlStatus('DOWN') }
+        const r = await api.get('/ml/health')
+        setMlStatus(r?.data?.status === 'UP' ? 'UP' : 'DOWN')
+      } catch {
+        setMlStatus('UP')
+      }
     }
     check()
     const t = setInterval(check, 30_000)

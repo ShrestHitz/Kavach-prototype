@@ -129,12 +129,11 @@ export default function ProjectDetailPage() {
         max_single_payment:    (p.totalExpenditurePaise / 100) * 0.4,
       }
 
-      // Try FastAPI ML directly via proxy or local port
       let res: any = null
       try {
         res = await api.post('/ml/predict-delay', payload)
       } catch {
-        res = await api.post('http://localhost:8001/api/ml/predict-delay', payload)
+        /* Handled gracefully by fallback */
       }
 
       if (res && res.data) {

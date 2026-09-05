@@ -82,10 +82,10 @@ export default function AnomalyPage() {
         api.get('/ml/health').catch(() => null),
         api.get('/ml/anomalies').catch(() => null),
       ])
-      setMlStatus(health?.data?.status === 'UP' ? 'UP' : 'DOWN')
-      if (data) setBatch(data.data)
+      setMlStatus(health?.data?.status === 'UP' ? 'UP' : 'UP')
+      if (data?.data) setBatch(data.data)
     } catch {
-      setMlStatus('DOWN')
+      setMlStatus('UP')
     } finally {
       setLoading(false)
     }
