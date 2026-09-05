@@ -17,6 +17,5 @@
     "noFallthroughCasesInSwitch": true,
     "allowArbitraryExtensions": true
   },
-  "include": ["src"],
-  "exclude": ["src/main.ts", "src/counter.ts", "src/style.css"]
+  "include": ["src"]
 }
